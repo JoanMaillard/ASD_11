@@ -92,3 +92,95 @@ TEST_CASE("Parcour croissant", "[bst]" ){
       tree.visit_in_order([](int key){ cout<<key<<" "; });
    }
 }
+
+TEST_CASE("Copy constructor", "[bst]") {
+    bst<int> tree;
+	SECTION( "Empty copy" ) {
+		bst<int> tree2(tree);
+		REQUIRE( to_string(tree2) == "" );
+	}
+    SECTION( "Filled copy" ) {
+        for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+            tree.insert(i);
+
+		bst<int> tree3(tree);
+		REQUIRE( to_string(tree3) == to_string(tree) );
+    }
+}
+
+TEST_CASE("Operator=", "[bst]") {
+	SECTION( "Pre-empty empty assign" ) {
+		bst<int> tree;
+		bst<int> tree2 = tree;
+		REQUIRE( to_string(tree2) == "" );
+	}
+
+	SECTION( "Pre-empty filled assign" ) {
+		bst<int> tree;
+
+		for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+            tree.insert(i);
+
+		bst<int> tree3 = tree;
+
+		REQUIRE( to_string(tree3) == to_string(tree) );
+	}
+
+	SECTION( "Pre-filled empty assign" ) {
+		bst<int> emptyTree;
+		bst<int> filledTree;
+
+		for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+            filledTree.insert(i);
+
+		filledTree = emptyTree;
+
+		REQUIRE( to_string(filledTree) == "" );
+	}
+
+	SECTION( "Pre-filled filled assign smaller" ) {
+		bst<int> smallTree;
+		bst<int> bigTree;
+
+		for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+            bigTree.insert(i);
+		for(int i : { 8, 4, 1, 2, 3, 6, 5 })
+            smallTree.insert(i);
+
+		bigTree = smallTree;
+
+		REQUIRE( to_string(bigTree) == to_string(smallTree) );
+	}
+
+	SECTION( "Pre-filled filled assign bigger" ) {
+		bst<int> smallTree;
+		bst<int> bigTree;
+
+		for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+            bigTree.insert(i);
+		for(int i : { 8, 4, 1, 2, 3, 6, 5 })
+            smallTree.insert(i);
+
+		smallTree = bigTree;
+
+		REQUIRE( to_string(bigTree) == to_string(smallTree) );
+	}
+}
+
+TEST_CASE("contains", "[bst]") {
+	bst<int> tree;
+	for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+            tree.insert(i);
+
+	SECTION( "contains" ) {
+
+
+		for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+            REQUIRE( tree.contains(i) );
+	}
+
+	SECTION( "does not contain" ) {
+		for(int i : { 9, 13, -1 })
+            REQUIRE( !tree.contains(i) );
+	}
+}

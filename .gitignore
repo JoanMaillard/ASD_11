@@ -35,3 +35,4 @@ IDE-specific files
 CMakeLists.txt
 *.project
 compile_flags.txt
+*.mk

@@ -59,9 +59,13 @@ public:
 private:
     // fonctions récursives utilisées par les fonctions publiques ci-dessus
     // elles sont static car elles n'ont pas besoin d'accéder à l'attribut root.
-
+	
     static void insert(Node<Key> *&r, Key const &k);
     static void to_stream(Node<Key> *r, std::ostream &s) noexcept;
+	
+	void newTreeFrom(Node<Key>* currentNode);
+	void deleteTreeFrom(Node<Key>* currentNode);
+	bool contains(Node<Key>* currentNode, Key const& k) const noexcept;
 };
 
 // toutes les fonctions sont définies dans le fichier inclus ci-dessous
