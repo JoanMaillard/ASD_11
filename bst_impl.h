@@ -42,18 +42,86 @@ void bst<Key>::to_stream(Node<Key> *r, std::ostream &s) noexcept {
 // méthodes de la classe bst
 
 template<typename Key>
-bst<Key>::bst() : root(nullptr) {
+bst<Key>::bst() : root(nullptr) {}
+
+template<typename Key>
+bst<Key>& bst<Key>::operator=(bst<Key> const &other) {
+	bst<Key> temp(other);
+	std::swap(root, temp.root);
+	return *this;
+}
+
+template<typename Key>
+bst<Key>::bst(bst<Key> const &other) {
+	if (other.root == nullptr)
+		return;
+	root = new Node<Key>{other.root->key, other.root->left, other.root->right};
+	newTreeFrom(root);
+}
+
+template<typename Key>
+void bst<Key>::newTreeFrom(Node<Key>* currentNode) {
+	if (currentNode->left != nullptr) {
+		currentNode->left = new Node<Key>{currentNode->left->key,
+									  currentNode->left->left, 
+									  currentNode->left->right};
+		newTreeFrom(currentNode->left);
+	}
+	if (currentNode->right != nullptr) {
+		currentNode->right = new Node<Key>{currentNode->right->key,
+									   currentNode->right->left, 
+									   currentNode->right->right};
+		newTreeFrom(currentNode->right);
+	}
 }
 
 template<typename Key>
 bst<Key>::~bst() {
-    // à mettre en oeuvre
+    if (root == nullptr)
+		return;
+	deleteTreeFrom(root);
+	delete root;
 }
+
+template<typename Key>
+void bst<Key>::deleteTreeFrom(Node<Key>* currentNode) {
+	if (currentNode->left != nullptr) {
+		deleteTreeFrom(currentNode->left);
+		delete currentNode->left;
+	}
+	if (currentNode->right != nullptr) {
+		deleteTreeFrom(currentNode->right);
+		delete currentNode->right;
+	}
+}
+
+template<typename Key>
+bool bst<Key>::contains(Key const& k) const noexcept {
+	if (root == nullptr)
+		return false;
+	return contains(root, k);
+}
+
+template<typename Key>
+bool bst<Key>::contains(Node<Key>* currentNode, Key const& k) const noexcept {
+	if (k == currentNode->key) 
+		return true;
+	else if (k < currentNode->key && currentNode->left != nullptr)
+		return contains(currentNode->left, k);
+	else if (k > currentNode->key && currentNode->right != nullptr)
+		return contains(currentNode->right, k);
+		
+	return false;
+}
+
+
 
 template<typename Key>
 void bst<Key>::insert(Key const& k) {
     insert(root, k);
 }
+
+
 
 template<typename Key>
 void bst<Key>::display_indented(std::ostream &s) const noexcept {
@@ -66,5 +134,6 @@ std::ostream& operator<<(std::ostream& s, bst<Key> const& t)
     bst<Key>::to_stream(t.root, s);
     return s;
 }
+
 
 #endif //ASD1_LABS_2020_BST_IMPL_H
