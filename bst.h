@@ -43,7 +43,7 @@ public:
 
     void erase(Key const& k) noexcept ;
 
-    template<typename Fn> void visit_in_order(Fn f) const ; // la fonction f prend un élément de type Key en paramètre
+   template<typename Fn> void visit_in_order(Fn f) const ; // la fonction f prend un élément de type Key en paramètre
                                                             // elle est appelée pour tous les éléments de l'arbre par
                                                             // ordre croissant.
 

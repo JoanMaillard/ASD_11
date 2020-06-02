@@ -80,3 +80,15 @@ TEST_CASE("display_indented", "[bst]") {
                               "   |_ 12\n" );
     }
 }
+
+TEST_CASE("Parcour croissant", "[bst]" ){
+   bst<int> tree;
+
+   SECTION( "Tree from ASD1 slides" ) {
+      for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
+         tree.insert(i);
+
+      cout<<"Parcour de l'arbre en ordre croissant"<<endl;
+      tree.visit_in_order([](int key){ cout<<key<<" "; });
+   }
+}
