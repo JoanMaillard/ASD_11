@@ -182,5 +182,48 @@ void bst<Key>::visit_in_order(Fn f) const {
       croissant(root, f);
 }
 
+template<typename Key>
+void linearizeTree(Node<Key>* node, Node<Key>*& L, size_t& n) {
+   if (node != nullptr) {
+      linearizeTree(node->right, L, n);
+      node->right = L;
+      L = node;
+      n += 1;
+      linearizeTree(node->left, L, n);
+      node->left = nullptr;
+   }
+}
+
+template<typename Key>
+void bst<Key>::linearize() noexcept {
+   size_t n = 0;
+   Node<Key>* linearizedTree = nullptr;
+   linearizeTree(this->root,linearizedTree, n);
+   root = linearizedTree;
+}
+
+template<typename Key>
+Node<Key>* arborize(Node<Key>*& node, Node<Key>*& L, size_t n){
+   Node<Key>* r = node;
+   if (n != 0){
+      Node<Key>* rg = arborize(r,L,(n-1)/2);
+      r = L;
+      r->left = rg;
+      L = L->right;
+      r->right = arborize(r,L,n/2);
+      return r;
+   }
+   else
+      return nullptr;
+
+}
+
+template<typename Key>
+void bst<Key>::balance() noexcept {
+   size_t n = 0;
+   Node<Key>* linearizedTree = nullptr;
+   linearizeTree(root,linearizedTree,n);
+   root = arborize(root,linearizedTree,n);
+}
 
 #endif //ASD1_LABS_2020_BST_IMPL_H

@@ -184,3 +184,29 @@ TEST_CASE("contains", "[bst]") {
             REQUIRE( !tree.contains(i) );
 	}
 }
+
+TEST_CASE("Linearize", "[bst]") {
+   bst<int> tree;
+
+   SECTION("Tree from ASD1 slides") {
+      for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
+         tree.insert(i);
+
+      tree.linearize();
+      ostringstream oss;
+      tree.display_indented(oss);
+      cout << oss.str();
+   }
+}
+TEST_CASE("Balance", "[bst]") {
+   bst<int> tree;
+
+   SECTION("Tree from ASD1 slides") {
+      for (int i : {1,2,3,4,5,6,7,8})
+         tree.insert(i);
+      tree.balance();
+      ostringstream oss;
+      tree.display_indented(oss);
+      cout << oss.str();
+   }
+}
