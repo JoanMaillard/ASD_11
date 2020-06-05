@@ -104,17 +104,19 @@ bool bst<Key>::contains(Key const& k) const noexcept {
 
 // Fonction récursive utilisée par Key const& bst<Key>::min() const
 template<typename Key>
-const Node<Key>* min(const Node<Key>* r) {
-    if (r->left != nullptr)
-        return min(r->left);
+const Node<Key>* minimum(Node<Key>* r) {
+    if (r->left != nullptr) {
+       return minimum(r->left);
+    }
     return r;
 }
 
 template<typename Key>
 Key const& bst<Key>::min() const {
-    if (root == nullptr)
-        throw std::exception();
-    return min(root)->Key;
+    if (root != nullptr) {
+       return (minimum(root->left))->key;
+    }
+    return Key(0);
 }
 
 // Fonction récursive utilisée par Key const& bst<Key>::max() const
@@ -232,7 +234,6 @@ void identer(Node<Key> *r, std::ostream &s,const std::string& prefix, bool estGa
       if(hauter > 1){
          s << prefix;
          s <<  "|_ " ;
-         // print the value of the node
          addPrefix += (estGauche ? "|  " : "   ");
       }
       else if(hauter == 1){
@@ -240,7 +241,6 @@ void identer(Node<Key> *r, std::ostream &s,const std::string& prefix, bool estGa
          addPrefix += (estGauche ? "|  " : "   ");
       }
       s << r->key << "\n";
-      // enter the next tree level - left and right branch
       if(r->right != nullptr || r->left != nullptr ) {
          identer(r->left, s, prefix + addPrefix, true, hauter + 1);
          identer(r->right, s, prefix + addPrefix, false, hauter + 1);

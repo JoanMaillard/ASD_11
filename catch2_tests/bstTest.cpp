@@ -84,15 +84,29 @@ TEST_CASE("display_indented", "[bst]") {
 TEST_CASE("Parcour croissant", "[bst]" ){
    bst<int> tree;
 
+   SECTION( "Empty tree" ) {
+      cout<<"Parcour d'un arbre vide";
+      tree.visit_in_order([](int key){ cout<<key<<" "; });
+      cout<<endl;
+   }
+
    SECTION( "Tree from ASD1 slides" ) {
       for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
          tree.insert(i);
-
       cout<<"Parcour de l'arbre en ordre croissant"<<endl;
       tree.visit_in_order([](int key){ cout<<key<<" "; });
+      cout<<endl;
+   }
+
+   SECTION( "Tree contains negative numbers" ) {
+      for (int i : {1,0,-1,2,})
+         tree.insert(i);
+      cout<<"Parcour de l'arbre en ordre croissant"<<endl;
+      tree.visit_in_order([](int key){ cout<<key<<" "; });
+      cout<<endl;
    }
 }
-
+/*
 TEST_CASE("Copy constructor", "[bst]") {
     bst<int> tree;
 	SECTION( "Empty copy" ) {
@@ -166,13 +180,15 @@ TEST_CASE("Operator=", "[bst]") {
 		REQUIRE( to_string(bigTree) == to_string(smallTree) );
 	}
 }
-
+*/
 TEST_CASE("contains", "[bst]") {
 	bst<int> tree;
 	for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
             tree.insert(i);
 
 	SECTION( "contains" ) {
+
+
 		for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
             REQUIRE( tree.contains(i) );
 	}
@@ -186,36 +202,52 @@ TEST_CASE("contains", "[bst]") {
 TEST_CASE("Linearize", "[bst]") {
    bst<int> tree;
 
+   SECTION( "Empty tree" ) {
+      tree.linearize();
+      REQUIRE( to_string(tree) == "" );
+   }
+
    SECTION("Tree from ASD1 slides") {
       for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
          tree.insert(i);
 
       tree.linearize();
-      ostringstream oss;
-      tree.display_indented(oss);
-      cout << oss.str();
+      REQUIRE( to_string(tree) == "1(.,2(.,3(.,4(.,5(.,6(.,7(.,8(.,10(.,11(.,12))))))))))" );
    }
 }
+
 TEST_CASE("Balance", "[bst]") {
    bst<int> tree;
+
+   SECTION( "Empty tree" ) {
+      tree.balance();
+      REQUIRE( to_string(tree) == "" );
+   }
 
    SECTION("Tree from ASD1 slides") {
       for (int i : {1,2,3,4,5,6,7,8})
          tree.insert(i);
       tree.balance();
-      ostringstream oss;
-      tree.display_indented(oss);
-      cout << oss.str();
+      REQUIRE( to_string(tree) == "4(2(1,3),6(5,7(.,8)))");
+
+   }
+
+   SECTION("Reversed Tree from ASD1 slides") {
+      for (int i : {8,7,6,5,4,3,2,1,})
+         tree.insert(i);
+      tree.balance();
+      REQUIRE( to_string(tree) == "4(2(1,3),6(5,7(.,8)))");
+
    }
 }
 
 TEST_CASE("min()", "[bst]") {
     bst<int> tree;
 
-    SECTION("Empty tree") {
-        REQUIRE(to_string(tree.min()) == "std::exception");
+  /*  SECTION("Empty tree") {
+        REQUIRE(to_string(tree.min()) == "0");
     }
-
+*/
     SECTION("Non-Empty tree") {
         for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
             tree.insert(i);
