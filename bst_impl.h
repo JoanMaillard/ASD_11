@@ -102,6 +102,107 @@ bool bst<Key>::contains(Key const& k) const noexcept {
 	return contains(root, k);
 }
 
+// Fonction récursive utilisée par Key const& bst<Key>::min() const
+template<typename Key>
+const Node<Key>* min(const Node<Key>* r) {
+    if (r->left != nullptr)
+        return min(r->left);
+    return r;
+}
+
+template<typename Key>
+Key const& bst<Key>::min() const {
+    if (root == nullptr)
+        return std::exception();
+    return min(root)->Key;
+}
+
+// Fonction récursive utilisée par Key const& bst<Key>::max() const
+template<typename Key>
+const Node<Key>* max(const Node<Key>* r) {
+    if (r->right != nullptr)
+        return max(r->right);
+    return r;
+}
+
+template<typename Key>
+Key const& bst<Key>::max() const {
+    if (root == nullptr)
+        return std::exception();
+    return max(root)->Key;
+}
+
+// Fonction récursive utilisée par void bst<Key>::erase_min()
+template<typename Key>
+void erase_min(Node<Key>* r) {
+    if (r->left != nullptr) {
+        erase_min(r->left);
+    } else {
+        Node<Key>* d = r->right;
+        delete r;
+        r = d;
+    }
+}
+
+template<typename Key>
+void bst<Key>::erase_min() {
+    if (root == nullptr)
+        throw std::exception();
+    erase_min(root);
+}
+
+// Fonction récursive utilisée par void bst<Key>::erase_max()
+template<typename Key>
+void erase_max(Node<Key>* r) {
+    if (r == nullptr)
+        throw std::exception();
+    if (r->right != nullptr) {
+        erase_max(r->right);
+    } else {
+        Node<Key>* g = r->left;
+        delete r;
+        r = g;
+    }
+}
+
+template<typename Key>
+void bst<Key>::erase_max() {
+    if (root == nullptr)
+        throw std::exception();
+    erase_max(root);
+}
+
+template<typename Key>
+void erase(Node<Key>* r, Key const& k) {
+    if (r == nullptr) {                          // k est absent
+        return;
+    } else if (k < r->key) {
+        erase(r->left, k);
+    } else if (k > r->key) {
+        erase(r->right, k);
+    } else {                                     // k est trouvé
+        Node<Key>* tmp = r;
+        if (r->left == nullptr) {
+            r = r->right;
+        } else if (r->right == nullptr) {
+            r = r->left;
+        } else {                                 // Hibbard
+            Node<Key>* m = min(r->right);
+            m->right = r->right;
+            m->left  = r->left;
+            r = m;
+        }
+        delete tmp;
+    }
+}
+
+template<typename Key>
+void bst<Key>::erase(Key const& k) noexcept {
+    if (root == nullptr)
+        throw std::exception();
+    erase(root, k);
+}
+
 template<typename Key>
 bool bst<Key>::contains(Node<Key>* currentNode, Key const& k) const noexcept {
 	if (k == currentNode->key)

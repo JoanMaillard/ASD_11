@@ -210,3 +210,14 @@ TEST_CASE("Balance", "[bst]") {
       cout << oss.str();
    }
 }
+
+/*
+Key const& min() const ;
+Key const& max() const ;
+void erase_min() ;
+void erase_max() ;
+
+void erase(Key const& k) noexcept ;
+ */
+
+TEST_CASE("")
