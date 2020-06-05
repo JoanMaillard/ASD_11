@@ -113,7 +113,7 @@ const Node<Key>* min(const Node<Key>* r) {
 template<typename Key>
 Key const& bst<Key>::min() const {
     if (root == nullptr)
-        return std::exception();
+        throw std::exception();
     return min(root)->Key;
 }
 

@@ -173,8 +173,6 @@ TEST_CASE("contains", "[bst]") {
             tree.insert(i);
 
 	SECTION( "contains" ) {
-
-
 		for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
             REQUIRE( tree.contains(i) );
 	}
@@ -211,13 +209,34 @@ TEST_CASE("Balance", "[bst]") {
    }
 }
 
-/*
-Key const& min() const ;
-Key const& max() const ;
-void erase_min() ;
-void erase_max() ;
+TEST_CASE("min()", "[bst]") {
+    bst<int> tree;
 
-void erase(Key const& k) noexcept ;
- */
+    SECTION("Empty tree") {
+        REQUIRE(to_string(tree.min()) == "std::exception");
+    }
 
-TEST_CASE("")
+    SECTION("Non-Empty tree") {
+        for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+            tree.insert(i);
+        REQUIRE(to_string(tree.min()) == "1");
+    }
+
+}
+
+TEST_CASE("max()", "[bst]") {
+
+
+}
+
+TEST_CASE("erase_min()", "[bst]") {
+
+}
+
+TEST_CASE("erase_max()", "[bst]") {
+
+}
+
+TEST_CASE("erase(Key const& k)", "[bst]") {
+
+}
