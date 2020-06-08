@@ -106,7 +106,7 @@ bool bst<Key>::contains(Key const& k) const noexcept {
 
 // Fonction récursive utilisée par Key const& bst<Key>::min() const
 template<typename Key>
-const Node<Key>* minimum(Node<Key>* r) {
+Node<Key>* minimum(Node<Key>* r) {
     if (r->left != nullptr) {
        return minimum(r->left);
     }
@@ -136,8 +136,10 @@ Key const& bst<Key>::max() const {
 }
 
 // Fonction récursive utilisée par void bst<Key>::erase_min()
+// On passe le pointeur par référence afin de pouvoir le modifier
+// (lui-même, pas son contenu)
 template<typename Key>
-void erase_minimum(Node<Key>* r) {
+void erase_minimum(Node<Key>*& r) {
     if (r->left != nullptr) {
         erase_minimum(r->left);
     } else {
@@ -155,8 +157,10 @@ void bst<Key>::erase_min() {
 }
 
 // Fonction récursive utilisée par void bst<Key>::erase_max()
+// On passe le pointeur par référence afin de pouvoir le modifier
+// (lui-même, pas son contenu)
 template<typename Key>
-void erase_maximum(Node<Key>* r) {
+void erase_maximum(Node<Key>*& r) {
     if (r == nullptr)
         throw std::exception();
     if (r->right != nullptr) {
@@ -176,13 +180,13 @@ void bst<Key>::erase_max() {
 }
 
 template<typename Key>
-void erase(Node<Key>* r, Key const& k) {
+void eraseKey(Node<Key>*& r, Key const& k) {
     if (r == nullptr) {                          // k est absent
         return;
     } else if (k < r->key) {
-        erase(r->left, k);
+        eraseKey(r->left, k);
     } else if (k > r->key) {
-        erase(r->right, k);
+        eraseKey(r->right, k);
     } else {                                     // k est trouvé
         Node<Key>* tmp = r;
         if (r->left == nullptr) {
@@ -190,7 +194,7 @@ void erase(Node<Key>* r, Key const& k) {
         } else if (r->right == nullptr) {
             r = r->left;
         } else {                                 // Hibbard
-            Node<Key>* m = min(r->right);
+            Node<Key>* m = minimum(r->right);
             m->right = r->right;
             m->left  = r->left;
             r = m;
@@ -198,12 +202,10 @@ void erase(Node<Key>* r, Key const& k) {
         delete tmp;
     }
 }
-
 template<typename Key>
 void bst<Key>::erase(Key const& k) noexcept {
-    if (root == nullptr)
-        throw std::exception();
-    erase(root, k);
+    if (root != nullptr)
+        eraseKey(root, k);
 }
 
 template<typename Key>
@@ -217,8 +219,6 @@ bool bst<Key>::contains(Node<Key>* currentNode, Key const& k) const noexcept {
 
 	return false;
 }
-
-
 
 template<typename Key>
 void bst<Key>::insert(Key const& k) {
@@ -251,8 +251,6 @@ void identer(Node<Key> *r, std::ostream &s,const std::string& prefix, bool estGa
       s << prefix <<"|_ .\n";
    }
 }
-
-
 
 template<typename Key>
 void bst<Key>::display_indented(std::ostream &s) const noexcept {

@@ -62,7 +62,7 @@ private:
 	
     static void insert(Node<Key> *&r, Key const &k);
     static void to_stream(Node<Key> *r, std::ostream &s) noexcept;
-	
+
 	void newTreeFrom(Node<Key>* currentNode);
 	void deleteTreeFrom(Node<Key>* currentNode);
 	bool contains(Node<Key>* currentNode, Key const& k) const noexcept;

@@ -16,8 +16,7 @@ int main() {
 
     cout << t << endl;
 
-    bst<int> t2{};
-    t2.insert(8);
-    t2.erase_min();
+    t.erase(6);
+    cout << t << endl;
 
 }

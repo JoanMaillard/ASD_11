@@ -328,7 +328,7 @@ TEST_CASE("erase_min()", "[bst]") {
         for (int i : {8, 4, 1, 2, 3, 6, 5, 7})
             tree.insert(i);
         tree.erase_min();
-        REQUIRE(to_string(tree) == "8(4(2(.,3),6(5,7)))");
+        REQUIRE(to_string(tree) == "8(4(2(.,3),6(5,7)),.)");
     }
 
     SECTION("Tree of many elements") {
@@ -363,7 +363,7 @@ TEST_CASE("erase_max()", "[bst]") {
         for (int i : {8, 4, 1, 2, 3, 6, 5, 7})
             tree.insert(i);
         tree.erase_max();
-        REQUIRE(to_string(tree) == "7(4(1(.,2(.,3)),6(5,.)),.)");
+        REQUIRE(to_string(tree) == "4(1(.,2(.,3)),6(5,7))");
     }
 
     SECTION("Tree of many elements") {
@@ -380,7 +380,7 @@ TEST_CASE("erase(Key const& k)", "[bst]") {
 
     SECTION("Empty tree") {
         key = 3;
-        REQUIRE_THROWS_AS(tree.erase(key), std::exception);
+        REQUIRE(to_string(tree) == "");
     }
 
     SECTION("Tree of one element, contains searched key") {
@@ -402,41 +402,46 @@ TEST_CASE("erase(Key const& k)", "[bst]") {
             tree.insert(i);
         key = 10;
         tree.erase(key);
-        REQUIRE(to_string(tree) == "8(.,11(10,.))");
+        REQUIRE(to_string(tree) == "8(.,11(.,12))");
     }
 
     SECTION("Tree with no left branch, NO searched key") {
         for (int i : {8, 11, 10, 12})
             tree.insert(i);
-        tree.erase_max();
-        REQUIRE(to_string(tree) == "8(.,11(10,.))");
+        key = 4;
+        tree.erase(key);
+        REQUIRE(to_string(tree) == "8(.,11(10,12))");
     }
 
     SECTION("Tree with no right branch, contains searched key") {
         for (int i : {8, 4, 1, 2, 3, 6, 5, 7})
             tree.insert(i);
-        tree.erase_max();
-        REQUIRE(to_string(tree) == "7(4(1(.,2(.,3)),6(5,.)),.)");
+        key = 2;
+        tree.erase(key);
+        REQUIRE(to_string(tree) == "8(4(1(.,3),6(5,7)),.)");
     }
 
     SECTION("Tree with no right branch, NO searched key") {
         for (int i : {8, 4, 1, 2, 3, 6, 5, 7})
             tree.insert(i);
-        tree.erase_max();
-        REQUIRE(to_string(tree) == "7(4(1(.,2(.,3)),6(5,.)),.)");
+        key = 9;
+        tree.erase(key);
+        REQUIRE(to_string(tree) == "8(4(1(.,2(.,3)),6(5,7)),.)");
     }
 
     SECTION("Tree of many elements, contains searched key") {
         for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
             tree.insert(i);
-        tree.erase_max();
-        REQUIRE(to_string(tree) == "8(4(1(.,2(.,3)),6(5,7)),11(10,.))");
+        key = 2;
+        tree.erase(key);
+        REQUIRE(to_string(tree) == "8(4(1(.,3),6(5,7)),11(10,12))");
     }
 
     SECTION("Tree of many elements, NO searched key") {
         for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
             tree.insert(i);
-        tree.erase_max();
-        REQUIRE(to_string(tree) == "8(4(1(.,2(.,3)),6(5,7)),11(10,.))");
+        key = 9;
+        tree.erase(key);
+        REQUIRE(to_string(tree) == "8(4(1(.,2(.,3)),6(5,7)),11(10,12))");
     }
 }
