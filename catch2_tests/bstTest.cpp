@@ -402,45 +402,27 @@ TEST_CASE("erase(Key const& k)", "[bst]") {
     }
 
     SECTION("Node with no left branch, contains searched key") {
-        for (int i : {8, 4, 6 ,11, 10})
+        for (int i : {8, 4, 6 ,11, 10}) // 8(4(.,6),11(10,.))
             tree.insert(i);
         key = 4;
         tree.erase(key);
-        REQUIRE(to_string(tree) == "8(.,11(.,12))");
+        REQUIRE(to_string(tree) == "8(6,11(10,.))");
     }
-/*
-    SECTION("Node with no left branch, NO searched key") {
-        for (int i : {8, 4, 6 ,11, 10})
-            tree.insert(i);
-        key = 5;
-        tree.erase(key);
-        REQUIRE(to_string(tree) == "8(.,11(10,12))");
-    }
-    */
 
     SECTION("Node with no right branch, contains searched key") {
-        for (int i : {8, 4, 6 ,11, 10})
+        for (int i : {8, 4, 6 ,11, 10}) // 8(4(.,6),11(10,.))
             tree.insert(i);
         key = 11;
         tree.erase(key);
-        REQUIRE(to_string(tree) == "8(4(1(.,3),6(5,7)),.)");
+        REQUIRE(to_string(tree) == "8(4(.,6),10)");
     }
-/*
-    SECTION("Node with no right branch, NO searched key") {
-        for (int i : {8, 4, 6 ,11, 10})
-            tree.insert(i);
-        key = 9;
-        tree.erase(key);
-        REQUIRE(to_string(tree) == "8(4(1(.,2(.,3)),6(5,7)),.)");
-    }
-    */
 
     SECTION("Node with both right and left branch, contains searched key") {
         for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
             tree.insert(i);
         key = 4;
         tree.erase(key);
-        REQUIRE(to_string(tree) == "8(4(1(.,3),6(5,7)),11(10,12))");
+        REQUIRE(to_string(tree) == "8(1(.,2(.,3),6(5,7)),11(10,12))");
     }
 
     SECTION("Node with both right and left branch, NO searched key") {
