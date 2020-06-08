@@ -397,47 +397,49 @@ TEST_CASE("erase(Key const& k)", "[bst]") {
         REQUIRE(to_string(tree) == "8");
     }
 
-    SECTION("Tree with no left branch, contains searched key") {
-        for (int i : {8, 11, 10, 12})
-            tree.insert(i);
-        key = 10;
-        tree.erase(key);
-        REQUIRE(to_string(tree) == "8(.,11(.,12))");
-    }
-
-    SECTION("Tree with no left branch, NO searched key") {
-        for (int i : {8, 11, 10, 12})
+    SECTION("Node with no left branch, contains searched key") {
+        for (int i : {8, 4, 6 ,11, 10})
             tree.insert(i);
         key = 4;
         tree.erase(key);
+        REQUIRE(to_string(tree) == "8(.,11(.,12))");
+    }
+/*
+    SECTION("Node with no left branch, NO searched key") {
+        for (int i : {8, 4, 6 ,11, 10})
+            tree.insert(i);
+        key = 5;
+        tree.erase(key);
         REQUIRE(to_string(tree) == "8(.,11(10,12))");
     }
+    */
 
-    SECTION("Tree with no right branch, contains searched key") {
-        for (int i : {8, 4, 1, 2, 3, 6, 5, 7})
+    SECTION("Node with no right branch, contains searched key") {
+        for (int i : {8, 4, 6 ,11, 10})
             tree.insert(i);
-        key = 2;
+        key = 11;
         tree.erase(key);
         REQUIRE(to_string(tree) == "8(4(1(.,3),6(5,7)),.)");
     }
-
-    SECTION("Tree with no right branch, NO searched key") {
-        for (int i : {8, 4, 1, 2, 3, 6, 5, 7})
+/*
+    SECTION("Node with no right branch, NO searched key") {
+        for (int i : {8, 4, 6 ,11, 10})
             tree.insert(i);
         key = 9;
         tree.erase(key);
         REQUIRE(to_string(tree) == "8(4(1(.,2(.,3)),6(5,7)),.)");
     }
+    */
 
-    SECTION("Tree of many elements, contains searched key") {
+    SECTION("Node with both right and left branch, contains searched key") {
         for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
             tree.insert(i);
-        key = 2;
+        key = 4;
         tree.erase(key);
         REQUIRE(to_string(tree) == "8(4(1(.,3),6(5,7)),11(10,12))");
     }
 
-    SECTION("Tree of many elements, NO searched key") {
+    SECTION("Node with both right and left branch, NO searched key") {
         for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
             tree.insert(i);
         key = 9;
