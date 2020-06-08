@@ -244,31 +244,198 @@ TEST_CASE("Balance", "[bst]") {
 TEST_CASE("min()", "[bst]") {
     bst<int> tree;
 
-  /*  SECTION("Empty tree") {
-        REQUIRE(to_string(tree.min()) == "0");
+    SECTION("Empty tree") {
+        REQUIRE_THROWS_AS(tree.min(), std::exception);
     }
-*/
-    SECTION("Non-Empty tree") {
-        for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+
+    SECTION("Tree of one element") {
+        tree.insert(8);
+        REQUIRE(to_string(tree.min()) == "8");
+    }
+
+    SECTION("Tree with no left branch") {
+        for (int i : {8, 11, 10, 12})
+            tree.insert(i);
+        REQUIRE(to_string(tree.min()) == "8");
+    }
+
+    SECTION("Tree with no right branch") {
+        for (int i : {8, 4, 1, 2, 3, 6, 5, 7})
             tree.insert(i);
         REQUIRE(to_string(tree.min()) == "1");
     }
 
+    SECTION("Tree of many elements") {
+        for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
+            tree.insert(i);
+        REQUIRE(to_string(tree.min()) == "1");
+    }
 }
 
 TEST_CASE("max()", "[bst]") {
+    bst<int> tree;
 
+    SECTION("Empty tree") {
+        REQUIRE_THROWS_AS(tree.max(), std::exception);
+    }
 
+    SECTION("Tree of one element") {
+        tree.insert(8);
+        REQUIRE(to_string(tree.max()) == "8");
+    }
+
+    SECTION("Tree with no left branch") {
+        for (int i : {8, 11, 10, 12})
+            tree.insert(i);
+        REQUIRE(to_string(tree.max()) == "12");
+    }
+
+    SECTION("Tree with no right branch") {
+        for (int i : {8, 4, 1, 2, 3, 6, 5, 7})
+            tree.insert(i);
+        REQUIRE(to_string(tree.max()) == "8");
+    }
+
+    SECTION("Tree of many elements") {
+        for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
+            tree.insert(i);
+        REQUIRE(to_string(tree.max()) == "12");
+    }
 }
 
 TEST_CASE("erase_min()", "[bst]") {
+    bst<int> tree;
 
+    SECTION("Empty tree") {
+        REQUIRE_THROWS_AS(tree.erase_min(), std::exception);
+    }
+
+    SECTION("Tree of one element") {
+        tree.insert(8);
+        tree.erase_min();
+        REQUIRE(to_string(tree) == "");
+    }
+
+    SECTION("Tree with no left branch") {
+        for (int i : {8, 11, 10, 12})
+            tree.insert(i);
+        tree.erase_min();
+        REQUIRE(to_string(tree) == "11(10,12)");
+    }
+
+    SECTION("Tree with no right branch") {
+        for (int i : {8, 4, 1, 2, 3, 6, 5, 7})
+            tree.insert(i);
+        tree.erase_min();
+        REQUIRE(to_string(tree) == "8(4(2(.,3),6(5,7)))");
+    }
+
+    SECTION("Tree of many elements") {
+        for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
+            tree.insert(i);
+        tree.erase_min();
+        REQUIRE(to_string(tree) == "8(4(2(.,3),6(5,7)),11(10,12))");
+    }
 }
 
 TEST_CASE("erase_max()", "[bst]") {
+    bst<int> tree;
 
+    SECTION("Empty tree") {
+        REQUIRE_THROWS_AS(tree.erase_max(), std::exception);
+    }
+
+    SECTION("Tree of one element") {
+        tree.insert(8);
+        tree.erase_max();
+        REQUIRE(to_string(tree) == "");
+    }
+
+    SECTION("Tree with no left branch") {
+        for (int i : {8, 11, 10, 12})
+            tree.insert(i);
+        tree.erase_max();
+        REQUIRE(to_string(tree) == "8(.,11(10,.))");
+    }
+
+    SECTION("Tree with no right branch") {
+        for (int i : {8, 4, 1, 2, 3, 6, 5, 7})
+            tree.insert(i);
+        tree.erase_max();
+        REQUIRE(to_string(tree) == "7(4(1(.,2(.,3)),6(5,.)),.)");
+    }
+
+    SECTION("Tree of many elements") {
+        for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
+            tree.insert(i);
+        tree.erase_max();
+        REQUIRE(to_string(tree) == "8(4(1(.,2(.,3)),6(5,7)),11(10,.))");
+    }
 }
 
 TEST_CASE("erase(Key const& k)", "[bst]") {
+    bst<int> tree;
+    int key;
 
+    SECTION("Empty tree") {
+        key = 3;
+        REQUIRE_THROWS_AS(tree.erase(key), std::exception);
+    }
+
+    SECTION("Tree of one element, contains searched key") {
+        tree.insert(8);
+        key = 8;
+        tree.erase(key);
+        REQUIRE(to_string(tree) == "");
+    }
+
+    SECTION("Tree of one element, NO searched key") {
+        tree.insert(8);
+        key = 4;
+        tree.erase(key);
+        REQUIRE(to_string(tree) == "8");
+    }
+
+    SECTION("Tree with no left branch, contains searched key") {
+        for (int i : {8, 11, 10, 12})
+            tree.insert(i);
+        key = 10;
+        tree.erase(key);
+        REQUIRE(to_string(tree) == "8(.,11(10,.))");
+    }
+
+    SECTION("Tree with no left branch, NO searched key") {
+        for (int i : {8, 11, 10, 12})
+            tree.insert(i);
+        tree.erase_max();
+        REQUIRE(to_string(tree) == "8(.,11(10,.))");
+    }
+
+    SECTION("Tree with no right branch, contains searched key") {
+        for (int i : {8, 4, 1, 2, 3, 6, 5, 7})
+            tree.insert(i);
+        tree.erase_max();
+        REQUIRE(to_string(tree) == "7(4(1(.,2(.,3)),6(5,.)),.)");
+    }
+
+    SECTION("Tree with no right branch, NO searched key") {
+        for (int i : {8, 4, 1, 2, 3, 6, 5, 7})
+            tree.insert(i);
+        tree.erase_max();
+        REQUIRE(to_string(tree) == "7(4(1(.,2(.,3)),6(5,.)),.)");
+    }
+
+    SECTION("Tree of many elements, contains searched key") {
+        for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
+            tree.insert(i);
+        tree.erase_max();
+        REQUIRE(to_string(tree) == "8(4(1(.,2(.,3)),6(5,7)),11(10,.))");
+    }
+
+    SECTION("Tree of many elements, NO searched key") {
+        for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
+            tree.insert(i);
+        tree.erase_max();
+        REQUIRE(to_string(tree) == "8(4(1(.,2(.,3)),6(5,7)),11(10,.))");
+    }
 }

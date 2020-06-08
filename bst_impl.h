@@ -113,32 +113,31 @@ const Node<Key>* minimum(Node<Key>* r) {
 
 template<typename Key>
 Key const& bst<Key>::min() const {
-    if (root != nullptr) {
-       return (minimum(root->left))->key;
-    }
-    return Key(0);
+    if (root == nullptr)
+        throw std::exception();
+    return minimum(root)->key;
 }
 
 // Fonction récursive utilisée par Key const& bst<Key>::max() const
 template<typename Key>
-const Node<Key>* max(const Node<Key>* r) {
+const Node<Key>* maximum(const Node<Key>* r) {
     if (r->right != nullptr)
-        return max(r->right);
+        return maximum(r->right);
     return r;
 }
 
 template<typename Key>
 Key const& bst<Key>::max() const {
     if (root == nullptr)
-        return std::exception();
-    return max(root)->Key;
+        throw std::exception();
+    return maximum(root)->key;
 }
 
 // Fonction récursive utilisée par void bst<Key>::erase_min()
 template<typename Key>
-void erase_min(Node<Key>* r) {
+void erase_minimum(Node<Key>* r) {
     if (r->left != nullptr) {
-        erase_min(r->left);
+        erase_minimum(r->left);
     } else {
         Node<Key>* d = r->right;
         delete r;
@@ -150,16 +149,16 @@ template<typename Key>
 void bst<Key>::erase_min() {
     if (root == nullptr)
         throw std::exception();
-    erase_min(root);
+    erase_minimum(root);
 }
 
 // Fonction récursive utilisée par void bst<Key>::erase_max()
 template<typename Key>
-void erase_max(Node<Key>* r) {
+void erase_maximum(Node<Key>* r) {
     if (r == nullptr)
         throw std::exception();
     if (r->right != nullptr) {
-        erase_max(r->right);
+        erase_maximum(r->right);
     } else {
         Node<Key>* g = r->left;
         delete r;
@@ -171,7 +170,7 @@ template<typename Key>
 void bst<Key>::erase_max() {
     if (root == nullptr)
         throw std::exception();
-    erase_max(root);
+    erase_maximum(root);
 }
 
 template<typename Key>

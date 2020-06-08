@@ -15,4 +15,9 @@ int main() {
         t.insert(i);
 
     cout << t << endl;
+
+    bst<int> t2{};
+    t2.insert(8);
+    t2.erase_min();
+
 }
