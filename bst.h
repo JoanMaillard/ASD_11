@@ -66,6 +66,17 @@ private:
 	void newTreeFrom(Node<Key>* currentNode);
 	void deleteTreeFrom(Node<Key>* currentNode);
 	bool contains(Node<Key>* currentNode, Key const& k) const noexcept;
+  /*
+   const Node<Key>* minimum(Node<Key>* r);
+   const Node<Key>* maximum(const Node<Key>* r);
+   void erase_minimum(Node<Key>*& r);
+   void erase_maximum(Node<Key>*& r);
+   void eraseKey(Node<Key>*& r, Key const& k);
+   void displayIndented( Node<Key> *&r, std::ostream &s,const std::string& prefix, bool estGauche, size_t hauter);
+   template<typename Fn> void visitInOrder(Node<Key> *r, Fn f);
+   void linearizeTree(Node<Key>* node, Node<Key>*& L, size_t& n);
+   Node<Key>* arborize(Node<Key>*& node, Node<Key>*& L, size_t n);
+   */
 };
 
 // toutes les fonctions sont définies dans le fichier inclus ci-dessous

@@ -81,29 +81,27 @@ TEST_CASE("display_indented", "[bst]") {
     }
 }
 
-TEST_CASE("Parcour croissant", "[bst]" ){
+TEST_CASE("visit in order", "[bst]" ){
    bst<int> tree;
-
+   bst<char> charTree;
+   string os;
    SECTION( "Empty tree" ) {
-      cout<<"Parcour d'un arbre vide";
-      tree.visit_in_order([](int key){ cout<<key<<" "; });
-      cout<<endl;
+      tree.visit_in_order([&os](int key){ os += to_string(key) + " "; });
+      REQUIRE(  os == "" );
    }
 
    SECTION( "Tree from ASD1 slides" ) {
-      for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
+      for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 9, 12})
          tree.insert(i);
-      cout<<"Parcour de l'arbre en ordre croissant"<<endl;
-      tree.visit_in_order([](int key){ cout<<key<<" "; });
-      cout<<endl;
+      tree.visit_in_order([&os](int key){ os += to_string(key) + " " ; });
+      REQUIRE(  os == "1 2 3 4 5 6 7 8 9 10 11 12 " );
    }
 
-   SECTION( "Tree contains negative numbers" ) {
-      for (int i : {1,0,-1,2,})
+   SECTION( "Tree contains char" ) {
+      for (char i : {'a', 'r', 'b','r', 'e'})
          tree.insert(i);
-      cout<<"Parcour de l'arbre en ordre croissant"<<endl;
-      tree.visit_in_order([](int key){ cout<<key<<" "; });
-      cout<<endl;
+      charTree.visit_in_order([&os](char key){ os += to_string(key) + " " ; });
+      REQUIRE(  os == "a b e r r" );
    }
 }
 
@@ -184,8 +182,14 @@ TEST_CASE("Operator=", "[bst]") {
 
 TEST_CASE("contains", "[bst]") {
 	bst<int> tree;
-	for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
-            tree.insert(i);
+
+   SECTION( "Empty Tree" ) {
+
+         REQUIRE( !tree.contains(5) );
+   }
+
+   for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+      tree.insert(i);
 
 	SECTION( "contains" ) {
 
