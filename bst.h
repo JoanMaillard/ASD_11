@@ -62,21 +62,19 @@ private:
 	
     static void insert(Node<Key> *&r, Key const &k);
     static void to_stream(Node<Key> *r, std::ostream &s) noexcept;
-
-	void newTreeFrom(Node<Key>* currentNode);
-	void deleteTreeFrom(Node<Key>* currentNode);
-	bool contains(Node<Key>* currentNode, Key const& k) const noexcept;
-  /*
-   const Node<Key>* minimum(Node<Key>* r);
-   const Node<Key>* maximum(const Node<Key>* r);
-   void erase_minimum(Node<Key>*& r);
-   void erase_maximum(Node<Key>*& r);
-   void eraseKey(Node<Key>*& r, Key const& k);
-   void displayIndented( Node<Key> *&r, std::ostream &s,const std::string& prefix, bool estGauche, size_t hauter);
-   template<typename Fn> void visitInOrder(Node<Key> *r, Fn f);
-   void linearizeTree(Node<Key>* node, Node<Key>*& L, size_t& n);
-   Node<Key>* arborize(Node<Key>*& node, Node<Key>*& L, size_t n);
-   */
+	 void newTreeFrom(Node<Key>* currentNode);
+	 void deleteTreeFrom(Node<Key>* currentNode);
+	 bool contains(Node<Key>* currentNode, Key const& k) const noexcept;
+    Node<Key>* extract_min(Node<Key>*& r);
+    Node<Key>* minimum(Node<Key>* r) const;
+    Node<Key>* maximum(Node<Key>* r) const ;
+    void erase_minimum(Node<Key>*& r);
+    void erase_maximum(Node<Key>*& r);
+    void eraseKey(Node<Key>*& r, Key const& k);
+    void displayIndented(Node<Key> *r, std::ostream &s,const std::string& prefix, bool estGauche, size_t hauter) const;
+    template<typename Fn> void visitInOrder(Node<Key> *r, Fn f) const;
+    void linearizeTree(Node<Key>* node, Node<Key>*& L, size_t& n);
+    Node<Key>* arborize(Node<Key>*& node, Node<Key>*& L, size_t n);
 };
 
 // toutes les fonctions sont définies dans le fichier inclus ci-dessous

@@ -64,7 +64,20 @@ void bst<Key>::deleteTreeFrom(Node<Key>* currentNode) {
 }
 
 template<typename Key>
-Node<Key>* minimum(Node<Key>* r) {
+Node<Key>* bst<Key>::extract_min(Node<Key>*& r)  {
+   if (r->left != nullptr) {
+      return extract_min(r->left);
+   }
+   else{
+      Node<Key>* tmp = r;
+      r = r->right;
+      return tmp;
+   }
+
+}
+
+template<typename Key>
+Node<Key>* bst<Key>::minimum(Node<Key>* r) const {
    if (r->left != nullptr) {
       return minimum(r->left);
    }
@@ -72,14 +85,14 @@ Node<Key>* minimum(Node<Key>* r) {
 }
 
 template<typename Key>
-Node<Key>* maximum(Node<Key>* r) {
+Node<Key>* bst<Key>::maximum(Node<Key>* r) const {
    if (r->right != nullptr)
       return maximum(r->right);
    return r;
 }
 
 template<typename Key>
-void erase_minimum(Node<Key>*& r) {
+void bst<Key>::erase_minimum(Node<Key>*& r) {
    if (r->left != nullptr) {
       erase_minimum(r->left);
    } else {
@@ -90,7 +103,7 @@ void erase_minimum(Node<Key>*& r) {
 }
 
 template<typename Key>
-void erase_maximum(Node<Key>*& r) {
+void bst<Key>::erase_maximum(Node<Key>*& r) {
    if (r == nullptr)
       throw std::exception();
    if (r->right != nullptr) {
@@ -103,7 +116,7 @@ void erase_maximum(Node<Key>*& r) {
 }
 
 template<typename Key>
-void eraseKey(Node<Key>*& r, Key const& k) {
+void bst<Key>::eraseKey(Node<Key>*& r, Key const& k) {
    if (r == nullptr) {                          // k est absent
       return;
    } else if (k < r->key) {
@@ -117,7 +130,7 @@ void eraseKey(Node<Key>*& r, Key const& k) {
       } else if (r->right == nullptr) {
          r = r->left;
       } else {                                 // Hibbard
-         Node<Key>* m = minimum(r->right);
+         Node<Key>* m = extract_min(r->right);
          m->right = r->right;
          m->left  = r->left;
          r = m;
@@ -139,7 +152,7 @@ bool bst<Key>::contains(Node<Key>* currentNode, Key const& k) const noexcept {
 }
 
 template<typename Key>
-void displayIndented(Node<Key> *r, std::ostream &s,const std::string& prefix, bool estGauche, size_t hauter) {
+void bst<Key>::displayIndented(Node<Key> *r, std::ostream &s,const std::string& prefix, bool estGauche, size_t hauter) const {
    if( r != nullptr )
    {
       std::string addPrefix = "";
@@ -162,9 +175,9 @@ void displayIndented(Node<Key> *r, std::ostream &s,const std::string& prefix, bo
       s << prefix <<"|_ .\n";
    }
 }
-
-template<typename Fn, typename Key>
-void visitInOrder(Node<Key> *r, Fn f) {
+template<typename Key>
+template<typename Fn>
+void bst<Key>::visitInOrder(Node<Key> *r, Fn f) const {
    if (r != nullptr){
       visitInOrder(r->left, f);
       f(r->key);
@@ -173,7 +186,7 @@ void visitInOrder(Node<Key> *r, Fn f) {
 }
 
 template<typename Key>
-void linearizeTree(Node<Key>* node, Node<Key>*& L, size_t& n) {
+void bst<Key>::linearizeTree(Node<Key>* node, Node<Key>*& L, size_t& n) {
    if (node != nullptr) {
       linearizeTree(node->right, L, n);
       node->right = L;
@@ -185,7 +198,7 @@ void linearizeTree(Node<Key>* node, Node<Key>*& L, size_t& n) {
 }
 
 template<typename Key>
-Node<Key>* arborize(Node<Key>*& node, Node<Key>*& L, size_t n){
+Node<Key>* bst<Key>::arborize(Node<Key>*& node, Node<Key>*& L, size_t n){
    Node<Key>* r = node;
    if (n != 0){
       Node<Key>* rg = arborize(r,L,(n-1)/2);

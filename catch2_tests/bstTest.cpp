@@ -56,7 +56,7 @@ TEST_CASE( "insert", "[bst]") {
     }
 }
 
-TEST_CASE("display_indented", "[bst]") {
+TEST_CASE("Display_indented", "[bst]") {
     bst<int> tree;
 
     SECTION( "Tree from ASD1 slides" ) {
@@ -81,7 +81,7 @@ TEST_CASE("display_indented", "[bst]") {
     }
 }
 
-TEST_CASE("visit in order", "[bst]" ){
+TEST_CASE("Visit in order", "[bst]" ){
    bst<int> tree;
    bst<char> charTree;
    string os;
@@ -98,10 +98,10 @@ TEST_CASE("visit in order", "[bst]" ){
    }
 
    SECTION( "Tree contains char" ) {
-      for (char i : {'a', 'r', 'b','r', 'e'})
-         tree.insert(i);
+      for (char i : {'b', 'a', 'c', 'o', 'n'})
+         charTree.insert(i);
       charTree.visit_in_order([&os](char key){ os += to_string(key) + " " ; });
-      REQUIRE(  os == "a b e r r" );
+      REQUIRE(  os == "a b c n o " );
    }
 }
 
