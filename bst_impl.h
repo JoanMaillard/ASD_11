@@ -1,7 +1,3 @@
-//
-// Created by Olivier Cuisenaire on 23.05.20.
-//
-
 #ifndef ASD1_LABS_2020_BST_IMPL_H
 #define ASD1_LABS_2020_BST_IMPL_H
 
@@ -39,196 +35,111 @@ void bst<Key>::to_stream(Node<Key> *r, std::ostream &s) noexcept {
     }
 }
 
-// méthodes de la classe bst
-
-template<typename Key>
-bst<Key>::bst() : root(nullptr) {}
-
-template<typename Key>
-bst<Key>& bst<Key>::operator=(bst<Key> const &other) {
-	bst<Key> temp(other);
-	std::swap(root, temp.root);
-	return *this;
-}
-
-template<typename Key>
-bst<Key>::bst(bst<Key> const &other) {
-	if (other.root == nullptr) {
-		root = nullptr;
-		return;
-	}
-	root = new Node<Key>{other.root->key, other.root->left, other.root->right};
-	newTreeFrom(root);
-}
-
 template<typename Key>
 void bst<Key>::newTreeFrom(Node<Key>* currentNode) {
-	if (currentNode->left != nullptr) {
-		currentNode->left = new Node<Key>{currentNode->left->key,
-									  currentNode->left->left,
-									  currentNode->left->right};
-		newTreeFrom(currentNode->left);
-	}
-	if (currentNode->right != nullptr) {
-		currentNode->right = new Node<Key>{currentNode->right->key,
-									   currentNode->right->left,
-									   currentNode->right->right};
-		newTreeFrom(currentNode->right);
-	}
-}
-
-template<typename Key>
-bst<Key>::~bst() {
-    if (root == nullptr)
-		return;
-	deleteTreeFrom(root);
-	delete root;
+   if (currentNode->left != nullptr) {
+      currentNode->left = new Node<Key>{currentNode->left->key,
+                                        currentNode->left->left,
+                                        currentNode->left->right};
+      newTreeFrom(currentNode->left);
+   }
+   if (currentNode->right != nullptr) {
+      currentNode->right = new Node<Key>{currentNode->right->key,
+                                         currentNode->right->left,
+                                         currentNode->right->right};
+      newTreeFrom(currentNode->right);
+   }
 }
 
 template<typename Key>
 void bst<Key>::deleteTreeFrom(Node<Key>* currentNode) {
-	if (currentNode->left != nullptr) {
-		deleteTreeFrom(currentNode->left);
-		delete currentNode->left;
-	}
-	if (currentNode->right != nullptr) {
-		deleteTreeFrom(currentNode->right);
-		delete currentNode->right;
-	}
+   if (currentNode->left != nullptr) {
+      deleteTreeFrom(currentNode->left);
+      delete currentNode->left;
+   }
+   if (currentNode->right != nullptr) {
+      deleteTreeFrom(currentNode->right);
+      delete currentNode->right;
+   }
 }
 
-template<typename Key>
-bool bst<Key>::contains(Key const& k) const noexcept {
-	if (root == nullptr)
-		return false;
-	return contains(root, k);
-}
-
-// Fonction récursive utilisée par Key const& bst<Key>::min() const
 template<typename Key>
 Node<Key>* minimum(Node<Key>* r) {
-    if (r->left != nullptr) {
-       return minimum(r->left);
-    }
-    return r;
+   if (r->left != nullptr) {
+      return minimum(r->left);
+   }
+   return r;
 }
 
 template<typename Key>
-Key const& bst<Key>::min() const {
-    if (root == nullptr)
-        throw std::exception();
-    return minimum(root)->key;
+Node<Key>* maximum(Node<Key>* r) {
+   if (r->right != nullptr)
+      return maximum(r->right);
+   return r;
 }
 
-// Fonction récursive utilisée par Key const& bst<Key>::max() const
-template<typename Key>
-const Node<Key>* maximum(const Node<Key>* r) {
-    if (r->right != nullptr)
-        return maximum(r->right);
-    return r;
-}
-
-template<typename Key>
-Key const& bst<Key>::max() const {
-    if (root == nullptr)
-        throw std::exception();
-    return maximum(root)->key;
-}
-
-// Fonction récursive utilisée par void bst<Key>::erase_min()
-// On passe le pointeur par référence afin de pouvoir le modifier
-// (lui-même, pas son contenu)
 template<typename Key>
 void erase_minimum(Node<Key>*& r) {
-    if (r->left != nullptr) {
-        erase_minimum(r->left);
-    } else {
-        Node<Key>* d = r->right;
-        delete r;
-        r = d;
-    }
+   if (r->left != nullptr) {
+      erase_minimum(r->left);
+   } else {
+      Node<Key>* d = r->right;
+      delete r;
+      r = d;
+   }
 }
 
-template<typename Key>
-void bst<Key>::erase_min() {
-    if (root == nullptr)
-        throw std::exception();
-    erase_minimum(root);
-}
-
-// Fonction récursive utilisée par void bst<Key>::erase_max()
-// On passe le pointeur par référence afin de pouvoir le modifier
-// (lui-même, pas son contenu)
 template<typename Key>
 void erase_maximum(Node<Key>*& r) {
-    if (r == nullptr)
-        throw std::exception();
-    if (r->right != nullptr) {
-        erase_maximum(r->right);
-    } else {
-        Node<Key>* g = r->left;
-        delete r;
-        r = g;
-    }
-}
-
-template<typename Key>
-void bst<Key>::erase_max() {
-    if (root == nullptr)
-        throw std::exception();
-    erase_maximum(root);
+   if (r == nullptr)
+      throw std::exception();
+   if (r->right != nullptr) {
+      erase_maximum(r->right);
+   } else {
+      Node<Key>* g = r->left;
+      delete r;
+      r = g;
+   }
 }
 
 template<typename Key>
 void eraseKey(Node<Key>*& r, Key const& k) {
-    if (r == nullptr) {                          // k est absent
-        return;
-    } else if (k < r->key) {
-        eraseKey(r->left, k);
-    } else if (k > r->key) {
-        eraseKey(r->right, k);
-    } else {                                     // k est trouvé
-        Node<Key>* tmp = r;
-        if (r->left == nullptr) {
-            r = r->right;
-        } else if (r->right == nullptr) {
-            r = r->left;
-        } else {                                 // Hibbard
-            Node<Key>* m = minimum(r->right);
-            m->right = r->right;
-            m->left  = r->left;
-            r = m;
-        }
-        delete tmp;
-    }
-}
-template<typename Key>
-void bst<Key>::erase(Key const& k) noexcept {
-    if (root != nullptr)
-        eraseKey(root, k);
+   if (r == nullptr) {                          // k est absent
+      return;
+   } else if (k < r->key) {
+      eraseKey(r->left, k);
+   } else if (k > r->key) {
+      eraseKey(r->right, k);
+   } else {                                     // k est trouvé
+      Node<Key>* tmp = r;
+      if (r->left == nullptr) {
+         r = r->right;
+      } else if (r->right == nullptr) {
+         r = r->left;
+      } else {                                 // Hibbard
+         Node<Key>* m = minimum(r->right);
+         m->right = r->right;
+         m->left  = r->left;
+         r = m;
+      }
+      delete tmp;
+   }
 }
 
 template<typename Key>
 bool bst<Key>::contains(Node<Key>* currentNode, Key const& k) const noexcept {
-	if (k == currentNode->key)
-		return true;
-	else if (k < currentNode->key && currentNode->left != nullptr)
-		return contains(currentNode->left, k);
-	else if (k > currentNode->key && currentNode->right != nullptr)
-		return contains(currentNode->right, k);
+   if (k == currentNode->key)
+      return true;
+   else if (k < currentNode->key && currentNode->left != nullptr)
+      return contains(currentNode->left, k);
+   else if (k > currentNode->key && currentNode->right != nullptr)
+      return contains(currentNode->right, k);
 
-	return false;
+   return false;
 }
 
 template<typename Key>
-void bst<Key>::insert(Key const& k) {
-    insert(root, k);
-}
-
-template<typename Key>
-void identer(Node<Key> *r, std::ostream &s,const std::string& prefix, bool estGauche, size_t hauter)
-{
-
+void displayIndented(Node<Key> *r, std::ostream &s,const std::string& prefix, bool estGauche, size_t hauter) {
    if( r != nullptr )
    {
       std::string addPrefix = "";
@@ -243,8 +154,8 @@ void identer(Node<Key> *r, std::ostream &s,const std::string& prefix, bool estGa
       }
       s << r->key << "\n";
       if(r->right != nullptr || r->left != nullptr ) {
-         identer(r->left, s, prefix + addPrefix, true, hauter + 1);
-         identer(r->right, s, prefix + addPrefix, false, hauter + 1);
+         displayIndented(r->left, s, prefix + addPrefix, true, hauter + 1);
+         displayIndented(r->right, s, prefix + addPrefix, false, hauter + 1);
       }
    }
    else{
@@ -252,34 +163,13 @@ void identer(Node<Key> *r, std::ostream &s,const std::string& prefix, bool estGa
    }
 }
 
-template<typename Key>
-void bst<Key>::display_indented(std::ostream &s) const noexcept {
-    if(root == nullptr) return;
-    std::string prefix="";
-    identer(root,s,prefix,false,0);
-}
-
-template <typename Key>
-std::ostream& operator<<(std::ostream& s, bst<Key> const& t)
-{
-    bst<Key>::to_stream(t.root, s);
-    return s;
-}
-
 template<typename Fn, typename Key>
-void croissant(Node<Key> *r, Fn f) {
+void visitInOrder(Node<Key> *r, Fn f) {
    if (r != nullptr){
-      croissant(r->left, f);
+      visitInOrder(r->left, f);
       f(r->key);
-      croissant(r->right, f);
+      visitInOrder(r->right, f);
    }
-}
-
-template<typename Key>
-template<typename Fn>
-void bst<Key>::visit_in_order(Fn f) const {
-   if(root != nullptr)
-      croissant(root, f);
 }
 
 template<typename Key>
@@ -292,14 +182,6 @@ void linearizeTree(Node<Key>* node, Node<Key>*& L, size_t& n) {
       linearizeTree(node->left, L, n);
       node->left = nullptr;
    }
-}
-
-template<typename Key>
-void bst<Key>::linearize() noexcept {
-   size_t n = 0;
-   Node<Key>* linearizedTree = nullptr;
-   linearizeTree(this->root,linearizedTree, n);
-   root = linearizedTree;
 }
 
 template<typename Key>
@@ -316,6 +198,110 @@ Node<Key>* arborize(Node<Key>*& node, Node<Key>*& L, size_t n){
    else
       return nullptr;
 
+}
+
+// méthodes de la classe bst
+template <typename Key>
+std::ostream& operator<<(std::ostream& s, bst<Key> const& t)
+{
+   bst<Key>::to_stream(t.root, s);
+   return s;
+}
+
+template<typename Key>
+bst<Key>::bst() : root(nullptr) {}
+
+template<typename Key>
+void bst<Key>::insert(Key const& k) {
+   insert(root, k);
+}
+
+template<typename Key>
+bst<Key>::bst(bst<Key> const &other) {
+   if (other.root == nullptr) {
+      root = nullptr;
+      return;
+   }
+   root = new Node<Key>{other.root->key, other.root->left, other.root->right};
+   newTreeFrom(root);
+}
+
+template<typename Key>
+bst<Key>& bst<Key>::operator=(bst<Key> const &other) {
+	bst<Key> temp(other);
+	std::swap(root, temp.root);
+	return *this;
+}
+
+template<typename Key>
+bst<Key>::~bst() {
+   if (root == nullptr)
+      return;
+   deleteTreeFrom(root);
+   delete root;
+}
+
+template<typename Key>
+bool bst<Key>::contains(Key const& k) const noexcept {
+	if (root == nullptr)
+		return false;
+	return contains(root, k);
+}
+
+template<typename Key>
+Key const& bst<Key>::min() const {
+    if (root == nullptr)
+        throw std::exception();
+    return minimum(root)->key;
+}
+
+template<typename Key>
+Key const& bst<Key>::max() const {
+    if (root == nullptr)
+        throw std::exception();
+    return maximum(root)->key;
+}
+
+template<typename Key>
+void bst<Key>::erase_min() {
+    if (root == nullptr)
+        throw std::exception();
+    erase_minimum(root);
+}
+
+template<typename Key>
+void bst<Key>::erase_max() {
+    if (root == nullptr)
+        throw std::exception();
+    erase_maximum(root);
+}
+
+template<typename Key>
+void bst<Key>::erase(Key const& k) noexcept {
+    if (root != nullptr)
+        eraseKey(root, k);
+}
+
+template<typename Key>
+template<typename Fn>
+void bst<Key>::visit_in_order(Fn f) const {
+   if(root != nullptr)
+      visitInOrder(root, f);
+}
+
+template<typename Key>
+void bst<Key>::display_indented(std::ostream &s) const noexcept {
+    if(root == nullptr) return;
+    std::string prefix="";
+    displayIndented(root,s,prefix,false,0);
+}
+
+template<typename Key>
+void bst<Key>::linearize() noexcept {
+   size_t n = 0;
+   Node<Key>* linearizedTree = nullptr;
+   linearizeTree(this->root,linearizedTree, n);
+   root = linearizedTree;
 }
 
 template<typename Key>
