@@ -106,13 +106,14 @@ TEST_CASE("Parcour croissant", "[bst]" ){
       cout<<endl;
    }
 }
-/*
+
 TEST_CASE("Copy constructor", "[bst]") {
     bst<int> tree;
 	SECTION( "Empty copy" ) {
 		bst<int> tree2(tree);
 		REQUIRE( to_string(tree2) == "" );
 	}
+	
     SECTION( "Filled copy" ) {
         for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
             tree.insert(i);
@@ -128,18 +129,18 @@ TEST_CASE("Operator=", "[bst]") {
 		bst<int> tree2 = tree;
 		REQUIRE( to_string(tree2) == "" );
 	}
-
+	
 	SECTION( "Pre-empty filled assign" ) {
 		bst<int> tree;
 
-		for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+		for( int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 } )
             tree.insert(i);
 
 		bst<int> tree3 = tree;
 
 		REQUIRE( to_string(tree3) == to_string(tree) );
 	}
-
+	
 	SECTION( "Pre-filled empty assign" ) {
 		bst<int> emptyTree;
 		bst<int> filledTree;
@@ -180,7 +181,7 @@ TEST_CASE("Operator=", "[bst]") {
 		REQUIRE( to_string(bigTree) == to_string(smallTree) );
 	}
 }
-*/
+
 TEST_CASE("contains", "[bst]") {
 	bst<int> tree;
 	for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })

@@ -53,8 +53,10 @@ bst<Key>& bst<Key>::operator=(bst<Key> const &other) {
 
 template<typename Key>
 bst<Key>::bst(bst<Key> const &other) {
-	if (other.root == nullptr)
+	if (other.root == nullptr) {
+		root = nullptr;
 		return;
+	}
 	root = new Node<Key>{other.root->key, other.root->left, other.root->right};
 	newTreeFrom(root);
 }
