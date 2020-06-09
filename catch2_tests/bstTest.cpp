@@ -59,6 +59,23 @@ TEST_CASE( "insert", "[bst]") {
 TEST_CASE("Display_indented", "[bst]") {
     bst<int> tree;
 
+    SECTION( "Empty tree" ) {
+      ostringstream oss;
+      tree.display_indented(oss);
+      REQUIRE(  oss.str() == "" );
+    }
+
+   SECTION( "Tree with two node" ) {
+      for(int i : { 8, 4})
+         tree.insert(i);
+
+      ostringstream oss;
+      tree.display_indented(oss);
+      REQUIRE(  oss.str() == "8\n"
+                             "|_ 4\n"
+                             "|_ .\n" );
+   }
+
     SECTION( "Tree from ASD1 slides" ) {
         for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
             tree.insert(i);
@@ -90,7 +107,7 @@ TEST_CASE("Visit in order", "[bst]" ){
       REQUIRE(  os == "" );
    }
 
-   SECTION( "Tree from ASD1 slides" ) {
+   SECTION( "Unsorted tree" ) {
       for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 9, 12})
          tree.insert(i);
       tree.visit_in_order([&os](int key){ os += to_string(key) + " " ; });
@@ -212,13 +229,21 @@ TEST_CASE("Linearize", "[bst]") {
       REQUIRE( to_string(tree) == "" );
    }
 
-   SECTION("Tree from ASD1 slides") {
+   SECTION("Normal tree") {
       for (int i : {8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12})
          tree.insert(i);
 
       tree.linearize();
       REQUIRE( to_string(tree) == "1(.,2(.,3(.,4(.,5(.,6(.,7(.,8(.,10(.,11(.,12))))))))))" );
    }
+
+   SECTION("Tree already linearized") {
+      for (int i : {12,11,10,9,8})
+         tree.insert(i);
+      tree.linearize();
+      REQUIRE(to_string(tree) == "8(.,9(.,10(.,11(.,12))))");
+   }
+
 }
 
 TEST_CASE("Balance", "[bst]") {
@@ -229,7 +254,7 @@ TEST_CASE("Balance", "[bst]") {
       REQUIRE( to_string(tree) == "" );
    }
 
-   SECTION("Tree from ASD1 slides") {
+   SECTION("Unbalanced Tree") {
       for (int i : {1,2,3,4,5,6,7,8})
          tree.insert(i);
       tree.balance();
@@ -237,8 +262,16 @@ TEST_CASE("Balance", "[bst]") {
 
    }
 
-   SECTION("Reversed Tree from ASD1 slides") {
-      for (int i : {8,7,6,5,4,3,2,1,})
+   SECTION("Unbalanced Tree with elements inserted backwards") {
+      for (int i : {8,7,6,5,4,3,2,1})
+         tree.insert(i);
+      tree.balance();
+      REQUIRE( to_string(tree) == "4(2(1,3),6(5,7(.,8)))");
+
+   }
+
+   SECTION("Unbalanced Tree with randomly inserted elements") {
+      for (int i : {1,7,4,3,8,2,6,5})
          tree.insert(i);
       tree.balance();
       REQUIRE( to_string(tree) == "4(2(1,3),6(5,7(.,8)))");
@@ -422,7 +455,7 @@ TEST_CASE("erase(Key const& k)", "[bst]") {
             tree.insert(i);
         key = 4;
         tree.erase(key);
-        REQUIRE(to_string(tree) == "8(1(.,2(.,3),6(5,7)),11(10,12))");
+        REQUIRE(to_string(tree) == "8(5(1(.,2(.,3)),6(.,7)),11(10,12))");
     }
 
     SECTION("Node with both right and left branch, NO searched key") {
